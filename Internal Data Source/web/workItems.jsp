@@ -25,7 +25,7 @@
         dwr.util.removeAllRows(listId);
         dwr.util.addRows(listId, list, [
                 function(t) { return t.name; },
-                function(t) { return t.count; },
+                function(t) { return t.count; }
             ],
             {
                 rowCreator: function(options) {
@@ -38,13 +38,7 @@
                 },
                 cellCreator: function(options) {
                     var td = document.createElement("td");
-                    if (options.rowData.value == null) {
-                        if (options.cellNum == 0)
-                            td.colSpan = 2;                                
-                        else
-                            return null;
-                    }
-                    else if (options.cellNum == 1)
+                    if (options.cellNum == 1)
                         td.style.textAlign = "right";
                     return td;
                 }
@@ -55,8 +49,8 @@
   
   <div>
     <a href="/internal/status.shtm"><fmt:message key="internal.status"/></a> |
-    <fmt:message key="internal.threads"/> |
-    <a href="/internal/workItems.shtm"><fmt:message key="internal.workItems"/></a>
+    <a href="/internal/threads.shtm"><fmt:message key="internal.threads"/></a> |
+    <fmt:message key="internal.workItems"/>
   </div>
   <br/>
   
