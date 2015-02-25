@@ -52,63 +52,60 @@ import com.serotonin.util.SerializationHelper;
  * @author Matthew Lohbihler
  */
 public class ReportVO extends AbstractVO<ReportVO> implements Serializable, JsonSerializable {
-	
-	public static final String XID_PREFIX = "REPORT_";
-	
+
+    public static final String XID_PREFIX = "REPORT_";
+
     public static final int DATE_RANGE_TYPE_RELATIVE = 1;
     public static final int DATE_RANGE_TYPE_SPECIFIC = 2;
     public static final ExportCodes DATE_RANGE_TYPES = new ExportCodes();
-    static{
-    	DATE_RANGE_TYPES.addElement(DATE_RANGE_TYPE_RELATIVE, "RELATIVE");
-    	DATE_RANGE_TYPES.addElement(DATE_RANGE_TYPE_SPECIFIC, "SPECIFIC");
+    static {
+        DATE_RANGE_TYPES.addElement(DATE_RANGE_TYPE_RELATIVE, "RELATIVE");
+        DATE_RANGE_TYPES.addElement(DATE_RANGE_TYPE_SPECIFIC, "SPECIFIC");
     }
-
 
     public static final int EVENTS_NONE = 1;
     public static final int EVENTS_ALARMS = 2;
     public static final int EVENTS_ALL = 3;
     public static final ExportCodes EVENT_CODES = new ExportCodes();
     static {
-    	EVENT_CODES.addElement(EVENTS_NONE, "NONE");
-    	EVENT_CODES.addElement(EVENTS_ALARMS, "ALARMS");
-    	EVENT_CODES.addElement(EVENTS_ALL, "ALL");
+        EVENT_CODES.addElement(EVENTS_NONE, "NONE");
+        EVENT_CODES.addElement(EVENTS_ALARMS, "ALARMS");
+        EVENT_CODES.addElement(EVENTS_ALL, "ALL");
     }
-    
+
     public static final int RELATIVE_DATE_TYPE_PREVIOUS = 1;
     public static final int RELATIVE_DATE_TYPE_PAST = 2;
 
     public static final ExportCodes DATE_RELATIVE_TYPES = new ExportCodes();
     static {
-    	DATE_RELATIVE_TYPES.addElement(RELATIVE_DATE_TYPE_PREVIOUS, "PREVIOUS");
-    	DATE_RELATIVE_TYPES.addElement(RELATIVE_DATE_TYPE_PAST, "PAST");
+        DATE_RELATIVE_TYPES.addElement(RELATIVE_DATE_TYPE_PREVIOUS, "PREVIOUS");
+        DATE_RELATIVE_TYPES.addElement(RELATIVE_DATE_TYPE_PAST, "PAST");
     }
-    
-    
-   
+
     public static final int SCHEDULE_CRON = 0;
     public static final ExportCodes SCHEDULE_CODES = new ExportCodes();
-    static{
-    	SCHEDULE_CODES.addElement(SCHEDULE_CRON, "CRON");
-    	SCHEDULE_CODES.addElement(TimePeriods.YEARS, "YEAR");
-    	SCHEDULE_CODES.addElement(TimePeriods.MONTHS, "MONTH");
-    	SCHEDULE_CODES.addElement(TimePeriods.WEEKS, "WEEK");
-    	SCHEDULE_CODES.addElement(TimePeriods.DAYS, "DAY");
-    	SCHEDULE_CODES.addElement(TimePeriods.HOURS, "HOUR");
-    	
+    static {
+        SCHEDULE_CODES.addElement(SCHEDULE_CRON, "CRON");
+        SCHEDULE_CODES.addElement(TimePeriods.YEARS, "YEAR");
+        SCHEDULE_CODES.addElement(TimePeriods.MONTHS, "MONTH");
+        SCHEDULE_CODES.addElement(TimePeriods.WEEKS, "WEEK");
+        SCHEDULE_CODES.addElement(TimePeriods.DAYS, "DAY");
+        SCHEDULE_CODES.addElement(TimePeriods.HOURS, "HOUR");
+
     }
-    
+
     private int userId;
-    
+
     @JsonProperty
     private List<ReportPointVO> points = new ArrayList<ReportPointVO>();
-    
+
     @JsonProperty
     private String template = "reportChart.ftl";
-    
+
     private int includeEvents = EVENTS_ALARMS;
     @JsonProperty
     private boolean includeUserComments = true;
-    
+
     private int dateRangeType = DATE_RANGE_TYPE_RELATIVE;
     private int relativeDateType = RELATIVE_DATE_TYPE_PREVIOUS;
 
@@ -135,7 +132,7 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
     private boolean schedule;
     private int schedulePeriod = Common.TimePeriods.DAYS;
     private String scheduleCron;
-    
+
     @JsonProperty
     private int runDelayMinutes;
 
@@ -161,10 +158,12 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
         fromMinute = dt.getMinuteOfHour();
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
@@ -184,13 +183,13 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
     public void setPoints(List<ReportPointVO> points) {
         this.points = points;
     }
-    
+
     public String getTemplate() {
-    	return template;
+        return template;
     }
-    
+
     public void setTemplate(String template) {
-    	this.template = template;
+        this.template = template;
     }
 
     public int getIncludeEvents() {
@@ -416,28 +415,30 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
     public void setRunDelayMinutes(int runDelayMinutes) {
         this.runDelayMinutes = runDelayMinutes;
     }
-    
+
     public Map<String, String> getXidMapping() {
-    	DataPointDao dpd = new DataPointDao();
-    	Map<String, String> ans = new HashMap<String, String>();
-    	for(ReportPointVO vo : points) {
-    		ans.put(dpd.get(vo.getPointId()).getXid(), vo.getPointKey());
-    	}
-    	return ans;
+        DataPointDao dpd = new DataPointDao();
+        Map<String, String> ans = new HashMap<String, String>();
+        for (ReportPointVO vo : points) {
+            ans.put(dpd.get(vo.getPointId()).getXid(), vo.getPointKey());
+        }
+        return ans;
     }
 
     //Helper for JSP Page
-    public String getUsername(){
-    	UserDao userDao = new UserDao();
-    	User reportUser = userDao.getUser(this.userId);
-        if(reportUser != null)
-        	return reportUser.getUsername();
+    public String getUsername() {
+        UserDao userDao = new UserDao();
+        User reportUser = userDao.getUser(this.userId);
+        if (reportUser != null)
+            return reportUser.getUsername();
         else
-        	return Common.translate("reports.validate.userDNE");
+            return Common.translate("reports.validate.userDNE");
     }
-    public void setUsername(String username){
-    	//NoOp
+
+    public void setUsername(String username) {
+        //NoOp
     }
+
     //
     //
     // Serialization
@@ -523,7 +524,7 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
             includeData = in.readBoolean();
             zipData = in.readBoolean();
         }
-        
+
         else if (ver == 2) {
             points = (List<ReportPointVO>) in.readObject();
             template = SerializationHelper.readSafeUTF(in);
@@ -562,11 +563,11 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
     }
 
     @Override
-    public void validate(ProcessResult response){
-    	super.validate(response);
+    public void validate(ProcessResult response) {
+        super.validate(response);
         if (points.isEmpty())
             response.addContextualMessage("points", "reports.validate.needPoint");
-        
+
         if (dateRangeType != ReportVO.DATE_RANGE_TYPE_RELATIVE && dateRangeType != ReportVO.DATE_RANGE_TYPE_SPECIFIC)
             response.addGenericMessage("reports.validate.invalidDateRangeType");
 
@@ -577,33 +578,37 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
             response.addContextualMessage("previousPeriodCount", "reports.validate.periodCountLessThan1");
         if (pastPeriodCount < 1)
             response.addContextualMessage("pastPeriodCount", "reports.validate.periodCountLessThan1");
-        
+
         UserDao dao = new UserDao();
         User user = dao.getUser(userId);
-        if(user == null){
+        if (user == null) {
             response.addContextualMessage("userId", "reports.validate.userDNE");
         }
-        
-        File t = new File(Common.MA_HOME + ModuleRegistry.getModule("reports").getDirectoryPath() + "/web/ftl/" + template);
-        if(!t.isFile())
-        	response.addContextualMessage("template", "reports.validate.template");
-        
+
+        File t = new File(Common.MA_HOME + ModuleRegistry.getModule("reports").getDirectoryPath() + "/web/ftl/"
+                + template);
+        if (!t.isFile())
+            response.addContextualMessage("template", "reports.validate.template");
+
         DataPointDao dataPointDao = new DataPointDao();
         for (ReportPointVO point : points) {
-        	DataPointVO vo  = dataPointDao.getDataPoint(point.getPointId());
-        	String pointXid = "unknown";
-        	if(vo != null){
-        		pointXid = vo.getXid();
-            	try{
-            		Permissions.ensureDataPointReadPermission(user, dataPointDao.getDataPoint(point.getPointId()));
-            	}catch(PermissionException e){
-            		
-            		response.addContextualMessage("points", "reports.vaildate.pointDNE");
-            	}
-        	}else{
-        		response.addContextualMessage("points", "reports.validate.pointPermissions",user.getUsername(), pointXid);
-        	}
-        		
+            DataPointVO vo = dataPointDao.getDataPoint(point.getPointId());
+            String pointXid = "unknown";
+            if (vo != null) {
+                pointXid = vo.getXid();
+                try {
+                    Permissions.ensureDataPointReadPermission(user, dataPointDao.getDataPoint(point.getPointId()));
+                }
+                catch (PermissionException e) {
+
+                    response.addContextualMessage("points", "reports.vaildate.pointDNE");
+                }
+            }
+            else {
+                response.addContextualMessage("points", "reports.validate.pointPermissions", user.getUsername(),
+                        pointXid);
+            }
+
             try {
                 if (!StringUtils.isBlank(point.getColour()))
                     ColorUtils.toColor(point.getColour());
@@ -615,35 +620,31 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
             if (point.getWeight() <= 0)
                 response.addContextualMessage("points", "reports.validate.weight");
         }
-        
+
         //Validate the schedule
-        if(schedule){
-        	if(schedulePeriod == SCHEDULE_CRON){
-        		try {
+        if (schedule) {
+            if (schedulePeriod == SCHEDULE_CRON) {
+                try {
                     new CronTimerTrigger(scheduleCron);
-                }catch (ParseException e) {
+                }
+                catch (ParseException e) {
                     response.addContextualMessage("scheduleCron", "validate.invalidValue");
                 }
-        	}
+            }
         }
-        
-        
-        
-        
+
     }
-    
-    
-    
+
     @Override
     public final void addProperties(List<TranslatableMessage> list) {
-    	super.addProperties(list);
+        super.addProperties(list);
 
         AuditEventType.addPropertyMessage(list, "reports.points", points);
         AuditEventType.addPropertyMessage(list, "reports.template", template);
         AuditEventType.addExportCodeMessage(list, "reports.includeEvents", EVENT_CODES, includeEvents);
         AuditEventType.addPropertyMessage(list, "reports.comments", includeUserComments);
         AuditEventType.addExportCodeMessage(list, "reports.dateRangeType", DATE_RANGE_TYPES, dateRangeType);
-        AuditEventType.addExportCodeMessage(list, "reports.relativeDateType",DATE_RELATIVE_TYPES, relativeDateType);
+        AuditEventType.addExportCodeMessage(list, "reports.relativeDateType", DATE_RELATIVE_TYPES, relativeDateType);
         AuditEventType.addPeriodMessage(list, "reports.previous", previousPeriodType, previousPeriodCount);
         AuditEventType.addPeriodMessage(list, "reports.past", pastPeriodType, pastPeriodCount);
         AuditEventType.addPropertyMessage(list, "reports.fromNone", fromNone);
@@ -668,17 +669,23 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
         AuditEventType.addPropertyMessage(list, "reports.zipData", zipData);
     }
 
-
+    @Override
     public void addPropertyChanges(List<TranslatableMessage> list, ReportVO from) {
-    	super.addPropertyChanges(list,from);
+        super.addPropertyChanges(list, from);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.points", points, from.points);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.template", from.template, template);
-        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.includeEvents", EVENT_CODES, from.includeEvents, includeEvents);
-        AuditEventType.maybeAddPropertyChangeMessage(list, "reports.comments", from.includeUserComments, includeUserComments);
-        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.dateRangeType", DATE_RANGE_TYPES, from.dateRangeType, dateRangeType);
-        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.relativeDateType",DATE_RELATIVE_TYPES, from.relativeDateType, relativeDateType);
-        AuditEventType.maybeAddPeriodChangeMessage(list, "reports.previous", from.previousPeriodType, from.previousPeriodCount, previousPeriodType, previousPeriodCount);
-        AuditEventType.maybeAddPeriodChangeMessage(list, "reports.past", from.pastPeriodType, from.pastPeriodCount, pastPeriodType, pastPeriodCount);
+        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.includeEvents", EVENT_CODES, from.includeEvents,
+                includeEvents);
+        AuditEventType.maybeAddPropertyChangeMessage(list, "reports.comments", from.includeUserComments,
+                includeUserComments);
+        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.dateRangeType", DATE_RANGE_TYPES,
+                from.dateRangeType, dateRangeType);
+        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.relativeDateType", DATE_RELATIVE_TYPES,
+                from.relativeDateType, relativeDateType);
+        AuditEventType.maybeAddPeriodChangeMessage(list, "reports.previous", from.previousPeriodType,
+                from.previousPeriodCount, previousPeriodType, previousPeriodCount);
+        AuditEventType.maybeAddPeriodChangeMessage(list, "reports.past", from.pastPeriodType, from.pastPeriodCount,
+                pastPeriodType, pastPeriodCount);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.fromNone", from.fromNone, fromNone);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.fromYear", from.fromYear, fromYear);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.fromMonth", from.fromMonth, fromMonth);
@@ -692,7 +699,8 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.toHour", from.toHour, toHour);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.toMinute", from.toMinute, toMinute);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.schedule", from.schedule, schedule);
-        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.scheulePeriod", SCHEDULE_CODES, from.schedulePeriod, schedulePeriod);
+        AuditEventType.maybeAddExportCodeChangeMessage(list, "reports.scheulePeriod", SCHEDULE_CODES,
+                from.schedulePeriod, schedulePeriod);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.runDelay", from.runDelayMinutes, runDelayMinutes);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.cron", from.scheduleCron, scheduleCron);
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.emailReport", from.email, email);
@@ -701,220 +709,224 @@ public class ReportVO extends AbstractVO<ReportVO> implements Serializable, Json
         AuditEventType.maybeAddPropertyChangeMessage(list, "reports.zipData", from.zipData, zipData);
     }
 
-    
-	/* (non-Javadoc)
-	 * @see com.serotonin.json.spi.JsonSerializable#jsonRead(com.serotonin.json.JsonReader, com.serotonin.json.type.JsonObject)
-	 */
-	@Override
-	public void jsonRead(JsonReader reader, JsonObject jsonObject)
-			throws JsonException {
-		super.jsonRead(reader, jsonObject);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.serotonin.json.spi.JsonSerializable#jsonRead(com.serotonin.json.JsonReader,
+     * com.serotonin.json.type.JsonObject)
+     */
+    @Override
+    public void jsonRead(JsonReader reader, JsonObject jsonObject) throws JsonException {
+        super.jsonRead(reader, jsonObject);
 
-		if(jsonObject.containsKey("userId")){
-			userId = jsonObject.getInt("userId");
-		}else if(jsonObject.containsKey("user")){
-			String username = jsonObject.getString("user");
-	        if (org.apache.commons.lang3.StringUtils.isBlank(username))
-	            throw new TranslatableJsonException("emport.error.missingValue", "user");
-	        User user = new UserDao().getUser(username);
-	        if (user == null)
-	            throw new TranslatableJsonException("emport.error.missingUser", username);
-	        userId = user.getId();
-		}
-		
-		String text = jsonObject.getString("includeEvents");
-		if(text != null){
-			includeEvents = EVENT_CODES.getId(text);
-			if(includeEvents == -1)
-				throw new TranslatableJsonException("emport.error.invalid",
-						"includeEvents", text,
-						EVENT_CODES.getCodeList());
-		}
-		
-		text = jsonObject.getString("dateRangeType");
-		if(text != null){
-			dateRangeType = DATE_RANGE_TYPES.getId(text);
-			if(dateRangeType == -1)
-				throw new TranslatableJsonException("emport.error.invalid",
-						"dateRangeType", text,
-						DATE_RANGE_TYPES.getCodeList());
-		}
-		
-		if(dateRangeType == DATE_RANGE_TYPE_RELATIVE){
-			text = jsonObject.getString("relativeDateType");
-			if(text != null){
-				relativeDateType = DATE_RELATIVE_TYPES.getId(text);
-				if(relativeDateType == -1)
-					throw new TranslatableJsonException("emport.error.invalid",
-							"relativeDateType", text,
-							DATE_RELATIVE_TYPES.getCodeList());
-			}
-		
-			if(relativeDateType == RELATIVE_DATE_TYPE_PREVIOUS ){
-				text = jsonObject.getString("previousPeriodType");
-				if(text != null){
-					previousPeriodType = Common.TIME_PERIOD_CODES.getId(text);
-					if(previousPeriodType == -1)
-						throw new TranslatableJsonException("emport.error.invalid",
-								"previousPeriodType", text,
-								Common.TIME_PERIOD_CODES.getCodeList());
-					previousPeriodCount = jsonObject.getInt("previousPeriods");
-				}
-			}else if(relativeDateType == RELATIVE_DATE_TYPE_PREVIOUS){
-				text = jsonObject.getString("pastPeriodType");
-				if(text != null){
-					pastPeriodType = Common.TIME_PERIOD_CODES.getId(text);
-					if(pastPeriodType == -1)
-						throw new TranslatableJsonException("emport.error.invalid",
-								"pastPeriodType", text,
-								Common.TIME_PERIOD_CODES.getCodeList());
-					pastPeriodCount = jsonObject.getInt("pastPeriods");
-				}
-			}
-		}else if(dateRangeType == DATE_RANGE_TYPE_SPECIFIC){
-			fromNone = jsonObject.getBoolean("fromInception");
-			if(!fromNone){
-				fromYear = jsonObject.getInt("fromYear");
-				fromMonth = jsonObject.getInt("fromMonth");
-				fromDay = jsonObject.getInt("fromDay");
-				fromHour = jsonObject.getInt("fromHour");
-				fromMinute = jsonObject.getInt("fromMinute");
-				
-			}
-			toNone = jsonObject.getBoolean("toLatest");
-			if(!toNone){
-				toYear = jsonObject.getInt("toYear");
-				toMonth = jsonObject.getInt("toMonth");
-				toDay = jsonObject.getInt("toDay");
-				toHour = jsonObject.getInt("toHour");
-				toMinute = jsonObject.getInt("toMinute");
-			}
-		}
-		
-		schedule = jsonObject.getBoolean("schedule");
-		if(schedule){
-			text = jsonObject.getString("schedulePeriod");
-			if(text != null){
-				schedulePeriod = SCHEDULE_CODES.getId(text);
-				if(schedulePeriod == -1)
-					throw new TranslatableJsonException("emport.error.invalid",
-							"schedulePeriod", text,
-							SCHEDULE_CODES.getCodeList());
-				if(schedulePeriod == SCHEDULE_CRON){
-					scheduleCron = jsonObject.getString("scheduleCron");
-					try {
-	                    new CronTimerTrigger(scheduleCron);
-	                }catch (ParseException e) {
-	                	throw new TranslatableJsonException("emport.error.invalid",
-								"scheduleCron", scheduleCron,
-								"cron expressions");
-	                }
-				}
-			}else{
-				throw new TranslatableJsonException("emport.error.invalid",
-						"schedulePeriod", "null",
-						SCHEDULE_CODES.getCodeList());
-			}
-		}
-		
-		email = jsonObject.getBoolean("email");
-		if(email){
-			
-			JsonArray recipientsArray = jsonObject.getJsonArray("recipients");
-			boolean add = true;
-			if(recipientsArray != null){
-				for(JsonValue jv : recipientsArray){
-					RecipientListEntryBean recipient = new RecipientListEntryBean();
-					reader.readInto(recipient, jv);
-					for(RecipientListEntryBean existing : recipients){
-						if(existing.equals(recipient)){
-							reader.readInto(existing, jv);
-							add = false;
-							break;
-						}
-					}
-					if(add){
-						recipients.add(recipient);
-					}else{
-						add = true;
-					}
-				}
-			}else{
-				throw new TranslatableJsonException("emport.error.invalid",
-						"recipients", "null",
-						"valid users, email addresses or mailing lists");
-			}
-			
-			includeData = jsonObject.getBoolean("includeData");
-			if(includeData)
-				zipData = jsonObject.getBoolean("zipData");
-				
-		}
-		
-	}
+        if (jsonObject.containsKey("userId")) {
+            userId = jsonObject.getInt("userId");
+        }
+        else if (jsonObject.containsKey("user")) {
+            String username = jsonObject.getString("user");
+            if (org.apache.commons.lang3.StringUtils.isBlank(username))
+                throw new TranslatableJsonException("emport.error.missingValue", "user");
+            User user = new UserDao().getUser(username);
+            if (user == null)
+                throw new TranslatableJsonException("emport.error.missingUser", username);
+            userId = user.getId();
+        }
 
-	/* (non-Javadoc)
-	 * @see com.serotonin.json.spi.JsonSerializable#jsonWrite(com.serotonin.json.ObjectWriter)
-	 */
-	@Override
-	public void jsonWrite(ObjectWriter writer) throws IOException,
-			JsonException {
-		super.jsonWrite(writer);
-		
-		writer.writeEntry("user", new UserDao().getUser(userId).getUsername());
-		writer.writeEntry("includeEvents", EVENT_CODES.getCode(includeEvents));
-		writer.writeEntry("dateRangeType", DATE_RANGE_TYPES.getCode(dateRangeType));
-		
-		if(dateRangeType == DATE_RANGE_TYPE_RELATIVE){
-			writer.writeEntry("relativeDateType", DATE_RELATIVE_TYPES.getCode(relativeDateType));
-			if(relativeDateType == RELATIVE_DATE_TYPE_PREVIOUS){
-				writer.writeEntry("perviousPeriodType", Common.TIME_PERIOD_CODES.getCode(previousPeriodType));
-				writer.writeEntry("previousPeriods", previousPeriodCount);
-			}else if(relativeDateType == RELATIVE_DATE_TYPE_PAST){
-				writer.writeEntry("pastPeriodType", Common.TIME_PERIOD_CODES.getCode(pastPeriodType));
-				writer.writeEntry("pastPeriods", pastPeriodCount);
-			}
-		}else if(dateRangeType == DATE_RANGE_TYPE_SPECIFIC){
-			writer.writeEntry("fromInception", fromNone);
-			if(!fromNone){
-				writer.writeEntry("fromYear", fromYear);
-				writer.writeEntry("fromMonth", fromMonth);
-				writer.writeEntry("fromDay", fromDay);
-				writer.writeEntry("fromHour", fromHour);
-				writer.writeEntry("fromMinute", fromMinute);
-			}
-			writer.writeEntry("toLatest", toNone);
-			if(!toNone){
-				writer.writeEntry("toYear", toYear);
-				writer.writeEntry("toMonth", toMonth);
-				writer.writeEntry("toDay", toDay);
-				writer.writeEntry("toHour", toHour);
-				writer.writeEntry("toMinute", toMinute);
-			}			
-			
-		}
-		
-		writer.writeEntry("schedule", schedule);
-		if(schedule){
-			writer.writeEntry("schedulePeriod", SCHEDULE_CODES.getCode(schedulePeriod));
-			if(schedulePeriod == SCHEDULE_CRON)
-				writer.writeEntry("scheduleCron", scheduleCron);
-		}
-		
-		writer.writeEntry("email", email);
-		if(email){
-			writer.writeEntry("recipients", recipients);
-			writer.writeEntry("includeData", includeData);
-			if(includeData)
-				writer.writeEntry("zipData", zipData);
-		}
-	}
+        String text = jsonObject.getString("includeEvents");
+        if (text != null) {
+            includeEvents = EVENT_CODES.getId(text);
+            if (includeEvents == -1)
+                throw new TranslatableJsonException("emport.error.invalid", "includeEvents", text,
+                        EVENT_CODES.getCodeList());
+        }
 
-	/* (non-Javadoc)
-	 * @see com.serotonin.m2m2.util.ChangeComparable#getTypeKey()
-	 */
-	@Override
-	public String getTypeKey() {
-		return "event.audit.report";
-	}
+        text = jsonObject.getString("dateRangeType");
+        if (text != null) {
+            dateRangeType = DATE_RANGE_TYPES.getId(text);
+            if (dateRangeType == -1)
+                throw new TranslatableJsonException("emport.error.invalid", "dateRangeType", text,
+                        DATE_RANGE_TYPES.getCodeList());
+        }
+
+        if (dateRangeType == DATE_RANGE_TYPE_RELATIVE) {
+            text = jsonObject.getString("relativeDateType");
+            if (text != null) {
+                relativeDateType = DATE_RELATIVE_TYPES.getId(text);
+                if (relativeDateType == -1)
+                    throw new TranslatableJsonException("emport.error.invalid", "relativeDateType", text,
+                            DATE_RELATIVE_TYPES.getCodeList());
+            }
+
+            if (relativeDateType == RELATIVE_DATE_TYPE_PREVIOUS) {
+                text = jsonObject.getString("previousPeriodType");
+                if (text != null) {
+                    previousPeriodType = Common.TIME_PERIOD_CODES.getId(text);
+                    if (previousPeriodType == -1)
+                        throw new TranslatableJsonException("emport.error.invalid", "previousPeriodType", text,
+                                Common.TIME_PERIOD_CODES.getCodeList());
+                    previousPeriodCount = jsonObject.getInt("previousPeriods");
+                }
+            }
+            else if (relativeDateType == RELATIVE_DATE_TYPE_PAST) {
+                text = jsonObject.getString("pastPeriodType");
+                if (text != null) {
+                    pastPeriodType = Common.TIME_PERIOD_CODES.getId(text);
+                    if (pastPeriodType == -1)
+                        throw new TranslatableJsonException("emport.error.invalid", "pastPeriodType", text,
+                                Common.TIME_PERIOD_CODES.getCodeList());
+                    pastPeriodCount = jsonObject.getInt("pastPeriods");
+                }
+            }
+        }
+        else if (dateRangeType == DATE_RANGE_TYPE_SPECIFIC) {
+            fromNone = jsonObject.getBoolean("fromInception");
+            if (!fromNone) {
+                fromYear = jsonObject.getInt("fromYear");
+                fromMonth = jsonObject.getInt("fromMonth");
+                fromDay = jsonObject.getInt("fromDay");
+                fromHour = jsonObject.getInt("fromHour");
+                fromMinute = jsonObject.getInt("fromMinute");
+
+            }
+            toNone = jsonObject.getBoolean("toLatest");
+            if (!toNone) {
+                toYear = jsonObject.getInt("toYear");
+                toMonth = jsonObject.getInt("toMonth");
+                toDay = jsonObject.getInt("toDay");
+                toHour = jsonObject.getInt("toHour");
+                toMinute = jsonObject.getInt("toMinute");
+            }
+        }
+
+        schedule = jsonObject.getBoolean("schedule");
+        if (schedule) {
+            text = jsonObject.getString("schedulePeriod");
+            if (text != null) {
+                schedulePeriod = SCHEDULE_CODES.getId(text);
+                if (schedulePeriod == -1)
+                    throw new TranslatableJsonException("emport.error.invalid", "schedulePeriod", text,
+                            SCHEDULE_CODES.getCodeList());
+                if (schedulePeriod == SCHEDULE_CRON) {
+                    scheduleCron = jsonObject.getString("scheduleCron");
+                    try {
+                        new CronTimerTrigger(scheduleCron);
+                    }
+                    catch (ParseException e) {
+                        throw new TranslatableJsonException("emport.error.invalid", "scheduleCron", scheduleCron,
+                                "cron expressions");
+                    }
+                }
+            }
+            else {
+                throw new TranslatableJsonException("emport.error.invalid", "schedulePeriod", "null",
+                        SCHEDULE_CODES.getCodeList());
+            }
+        }
+
+        email = jsonObject.getBoolean("email");
+        if (email) {
+
+            JsonArray recipientsArray = jsonObject.getJsonArray("recipients");
+            boolean add = true;
+            if (recipientsArray != null) {
+                for (JsonValue jv : recipientsArray) {
+                    RecipientListEntryBean recipient = new RecipientListEntryBean();
+                    reader.readInto(recipient, jv);
+                    for (RecipientListEntryBean existing : recipients) {
+                        if (existing.equals(recipient)) {
+                            reader.readInto(existing, jv);
+                            add = false;
+                            break;
+                        }
+                    }
+                    if (add) {
+                        recipients.add(recipient);
+                    }
+                    else {
+                        add = true;
+                    }
+                }
+            }
+            else {
+                throw new TranslatableJsonException("emport.error.invalid", "recipients", "null",
+                        "valid users, email addresses or mailing lists");
+            }
+
+            includeData = jsonObject.getBoolean("includeData");
+            if (includeData)
+                zipData = jsonObject.getBoolean("zipData");
+
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.serotonin.json.spi.JsonSerializable#jsonWrite(com.serotonin.json.ObjectWriter)
+     */
+    @Override
+    public void jsonWrite(ObjectWriter writer) throws IOException, JsonException {
+        super.jsonWrite(writer);
+
+        writer.writeEntry("user", new UserDao().getUser(userId).getUsername());
+        writer.writeEntry("includeEvents", EVENT_CODES.getCode(includeEvents));
+        writer.writeEntry("dateRangeType", DATE_RANGE_TYPES.getCode(dateRangeType));
+
+        if (dateRangeType == DATE_RANGE_TYPE_RELATIVE) {
+            writer.writeEntry("relativeDateType", DATE_RELATIVE_TYPES.getCode(relativeDateType));
+            if (relativeDateType == RELATIVE_DATE_TYPE_PREVIOUS) {
+                writer.writeEntry("perviousPeriodType", Common.TIME_PERIOD_CODES.getCode(previousPeriodType));
+                writer.writeEntry("previousPeriods", previousPeriodCount);
+            }
+            else if (relativeDateType == RELATIVE_DATE_TYPE_PAST) {
+                writer.writeEntry("pastPeriodType", Common.TIME_PERIOD_CODES.getCode(pastPeriodType));
+                writer.writeEntry("pastPeriods", pastPeriodCount);
+            }
+        }
+        else if (dateRangeType == DATE_RANGE_TYPE_SPECIFIC) {
+            writer.writeEntry("fromInception", fromNone);
+            if (!fromNone) {
+                writer.writeEntry("fromYear", fromYear);
+                writer.writeEntry("fromMonth", fromMonth);
+                writer.writeEntry("fromDay", fromDay);
+                writer.writeEntry("fromHour", fromHour);
+                writer.writeEntry("fromMinute", fromMinute);
+            }
+            writer.writeEntry("toLatest", toNone);
+            if (!toNone) {
+                writer.writeEntry("toYear", toYear);
+                writer.writeEntry("toMonth", toMonth);
+                writer.writeEntry("toDay", toDay);
+                writer.writeEntry("toHour", toHour);
+                writer.writeEntry("toMinute", toMinute);
+            }
+
+        }
+
+        writer.writeEntry("schedule", schedule);
+        if (schedule) {
+            writer.writeEntry("schedulePeriod", SCHEDULE_CODES.getCode(schedulePeriod));
+            if (schedulePeriod == SCHEDULE_CRON)
+                writer.writeEntry("scheduleCron", scheduleCron);
+        }
+
+        writer.writeEntry("email", email);
+        if (email) {
+            writer.writeEntry("recipients", recipients);
+            writer.writeEntry("includeData", includeData);
+            if (includeData)
+                writer.writeEntry("zipData", zipData);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.serotonin.m2m2.util.ChangeComparable#getTypeKey()
+     */
+    @Override
+    public String getTypeKey() {
+        return "event.audit.report";
+    }
 }
